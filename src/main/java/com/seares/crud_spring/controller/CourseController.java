@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.seares.crud_spring.model.Course;
 import com.seares.crud_spring.repository.CourseRepository;
+import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @RequestMapping("/api/courses")
@@ -22,11 +23,9 @@ public class CourseController {
 
     private final CourseRepository courseRepository;
 
-    
     public CourseController(CourseRepository courseRepository) {
         this.courseRepository = courseRepository;
     }
-
 
     @GetMapping
     public @ResponseBody List<Course> list() {
@@ -34,17 +33,30 @@ public class CourseController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Course> findById(@PathVariable("id") Long id){
+    public ResponseEntity<Course> findById(@PathVariable("id") Long id) {
         return courseRepository.findById(id)
-        .map(record -> ResponseEntity.ok().body(record))
-        .orElse(ResponseEntity.notFound().build());
+                .map(recordFound -> ResponseEntity.ok().body(recordFound))
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    //@ResponseStatus(code = HttpStatus.CREATED) Caso utilizar o Response status, dá para remover o ResponseEntity, e retornar apenas o que foi criado.
+    // @ResponseStatus(code = HttpStatus.CREATED) Caso utilizar o Response status,
+    // dá para remover o ResponseEntity, e retornar apenas o que foi criado.
     public ResponseEntity<Course> create(@RequestBody Course course) {
-        //return courseRepository.save(course);
+        // return courseRepository.save(course);
         return ResponseEntity.status(HttpStatus.CREATED)
-            .body(courseRepository.save(course));
+                .body(courseRepository.save(course));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Course> update(@PathVariable("id") Long id, @RequestBody Course course) {
+        return courseRepository.findById(id)
+                .map(recordFound -> {
+                    recordFound.setName(course.getName());
+                    recordFound.setCategory(course.getCategory());
+                    Course updated = courseRepository.save(recordFound);
+                    return ResponseEntity.ok().body(updated);
+                })
+                .orElse(ResponseEntity.notFound().build());
     }
 }
