@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 @Validated
 @RestController
-@RequestMapping("/api/courses")
+@RequestMapping("/api/courses/")
 
 public class CourseController {
 
