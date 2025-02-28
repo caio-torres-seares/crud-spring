@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.seares.crud_spring.model.Course;
+import com.seares.crud_spring.dto.CourseDTO;
 import com.seares.crud_spring.service.CourseService;
 
 import jakarta.validation.Valid;
@@ -37,27 +37,27 @@ public class CourseController {
     }
 
     @GetMapping
-    public @ResponseBody List<Course> list() {
+    public @ResponseBody List<CourseDTO> list() {
         return courseService.list();
     }
 
     @GetMapping("/{id}")
-    public Course findById(@PathVariable("id") @NotNull @Positive Long id) {
+    public CourseDTO findById(@PathVariable("id") @NotNull @Positive Long id) {
         return courseService.findById(id);
     }
 
     @PostMapping
     // @ResponseStatus(code = HttpStatus.CREATED) Caso utilizar o Response status,
     // dá para remover o ResponseEntity, e retornar apenas o que foi criado.
-    public ResponseEntity<Course> create(@RequestBody @Valid Course course) {
+    public ResponseEntity<CourseDTO> create(@RequestBody @NotNull @Valid CourseDTO course) {
         // return courseRepository.save(course);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(courseService.create(course));
     }
 
     @PutMapping("/{id}")
-    public Course update(@PathVariable("id") @NotNull @Positive Long id, 
-            @RequestBody @Valid Course course) {
+    public CourseDTO update(@PathVariable("id") @NotNull @Positive Long id, 
+            @RequestBody @Valid @NotNull CourseDTO course) {
         return courseService.update(id, course);
     }
 
