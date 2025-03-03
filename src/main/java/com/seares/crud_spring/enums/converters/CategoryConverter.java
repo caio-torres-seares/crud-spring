@@ -15,7 +15,7 @@ public class CategoryConverter implements AttributeConverter<Category, String> {
         if (category == null) {
             return null;
         }
-        return category.getCategory();
+        return category.getValue();
     }
 
     @Override
@@ -24,7 +24,7 @@ public class CategoryConverter implements AttributeConverter<Category, String> {
             return null;
         }
         return Stream.of(Category.values())
-                .filter(category -> category.getCategory().equals(value))
+                .filter(category -> category.getValue().equals(value))
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new);
     }

@@ -12,7 +12,7 @@ public class CourseMapper {
         if (course == null){
             return null;
         }
-        return new CourseDTO(course.getId(), course.getName(), "Front-end");
+        return new CourseDTO(course.getId(), course.getName(), course.getCategory().getValue());
     }
 
     public Course toEntity(CourseDTO courseDTO) {
@@ -26,7 +26,19 @@ public class CourseMapper {
             course.setId(courseDTO.id());
         }
         course.setName(courseDTO.name());
-        course.setCategory(Category.FRONT_END);
+        // TODO: Verificar a categoria
+        course.setCategory(convertCategoryValue(courseDTO.category()));
         return course;
+    }
+
+    public Category convertCategoryValue(String value) {
+        if (value == null) {
+            return null;
+        }
+        return switch (value) {
+            case "Back-end" -> Category.BACK_END;
+            case "Front-end"-> Category.FRONT_END;
+            default -> throw new IllegalArgumentException("Invalid value: " + value);
+        };
     }
 }
