@@ -1,5 +1,7 @@
 package com.seares.crud_spring.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -20,10 +22,11 @@ public class Lesson {
     @Column(length = 100, nullable = false)
     private String name;
 
-    @Column(length = 50, nullable = false)
+    @Column(length = 100, nullable = false)
     private String youtubeUrl;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "course_id", nullable = false)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Course course;
 }
