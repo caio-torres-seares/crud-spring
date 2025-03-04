@@ -50,8 +50,16 @@ public class CourseService {
                     Course course = courseMapper.toEntity(courseDTO);
                     recordFound.setName(courseDTO.name());
                     recordFound.setCategory(this.courseMapper.convertCategoryValue(courseDTO.category()));
+                    
+                    // Limpa as lições antigas
                     recordFound.getLessons().clear();
-                    course.getLessons().forEach(lesson -> recordFound.getLessons().add(lesson));
+                    
+                    // Adiciona as novas lições e sincroniza a relação bidirecional
+                    course.getLessons().forEach(lesson -> {
+                        lesson.setCourse(recordFound); // Sincroniza a relação bidirecional
+                        recordFound.getLessons().add(lesson);
+                    });
+                    
                     return courseMapper.toDTO(courseRepository.save(recordFound));
                 }).orElseThrow(() -> new RecordNotFoundException(id));
     }
